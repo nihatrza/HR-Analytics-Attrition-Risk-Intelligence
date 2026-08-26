@@ -23,7 +23,7 @@
 
 <br/>
 
-<img src="assets/overview.png" alt="Dashboard Banner" width="850"/>
+<img src="assets/page1_overview.png" alt="Dashboard Banner" width="850"/>
 
 <br/><br/>
 
@@ -48,14 +48,14 @@ This project moves through three professional analytics layers:
 | Layer | Tool | Purpose |
 |:---|:---|:---|
 | **1. Cleaning & Feature Engineering** | Python (Pandas, NumPy) | Raw data ingestion, validation, transformation, and generation of a proprietary `AttritionRiskScore` |
-| **2. Structured Storage & Querying** | PostgreSQL + pgAdmin 4 | Normalized relational storage, advanced SQL analytics (CTEs, window functions, aggregations) |
+| **2. Structured Storage & Querying** | PostgreSQL + pgAdmin 4 | Normalized relational storage, advanced SQL analytics (CTEs, window functions, JOINs) |
 | **3. Business Intelligence & Reporting** | Power BI + DAX | Star-schema semantic model, interactive dashboards, executive-ready KPIs |
 
 ### 🔑 Headline Findings
 
 <table>
 <tr><td>🚨</td><td><b>45.45%</b> attrition rate among OverTime staff with the lowest Work-Life Balance rating — over <b>5x</b> the rate of non-overtime, high work-life-balance peers (8.45%)</td></tr>
-<tr><td>💰</td><td>Departing <b>Managers</b> earned <b>$3,500–$5,300 less</b> than their active peers in the same role, exposed via <code>AVG() OVER (PARTITION BY JobRole)</code></td></tr>
+<tr><td>💰</td><td>Departing <b>Managers</b> earned <b>$3,500–$5,300 less</b> than their active peers in the same role, exposed via <code>AVG() OVER (PARTITION BY "JobRole")</code></td></tr>
 <tr><td>📉</td><td><b>Sales Executives</b> represent the single largest financial exposure — <b>$426,873/month</b> in lost payroll investment from 57 departures</td></tr>
 <tr><td>🎯</td><td><b>156 active employees (12.7%)</b> currently sit in the High-Risk cohort (<code>AttritionRiskScore ≥ 3</code>) and require immediate retention intervention</td></tr>
 <tr><td>🧬</td><td>Male employees from <b>Technical Degree</b> and <b>Marketing</b> educational backgrounds show elevated attrition of <b>27.50%</b> and <b>22.22%</b> respectively</td></tr>
@@ -67,29 +67,29 @@ This project moves through three professional analytics layers:
 
 ## 🎨 Interactive Dashboard Preview
 
-The Power BI report (`reports/HR_Analytics.pbix`) is organized into four purpose-built pages, each engineered around a distinct HR decision-making persona — from the C-suite overview to the granular risk-scoring command center.
+The Power BI report (`report/HR_Analytics.pbix`) is organized into four purpose-built pages, each engineered around a distinct HR decision-making persona — from the C-suite overview to the granular risk-scoring command center.
 
 <br/>
 
 <div align="center">
 
 ### 🏠 Overview — Executive Workforce Snapshot
-<img src="assets/overview.png" alt="Overview Dashboard" width="800"/>
+<img src="assets/page1_overview.png" alt="Overview Dashboard" width="800"/>
 
 <br/><br/>
 
 ### 👥 Demographics — Workforce Composition & Segmentation
-<img src="assets/demographics.png" alt="Demographics Dashboard" width="800"/>
+<img src="assets/page2_demographics.png" alt="Demographics Dashboard" width="800"/>
 
 <br/><br/>
 
 ### 😊 Satisfaction & Pay — Engagement vs. Compensation Analysis
-<img src="assets/satisfaction.png" alt="Satisfaction Dashboard" width="800"/>
+<img src="assets/page3_satisfaction.png" alt="Satisfaction Dashboard" width="800"/>
 
 <br/><br/>
 
 ### 🎯 Risk Detector — Attrition Risk Command Center
-<img src="assets/risk_detector.png" alt="Risk Detector Dashboard" width="800"/>
+<img src="assets/page4_risk_detector.png" alt="Risk Detector Dashboard" width="800"/>
 
 </div>
 
@@ -107,7 +107,7 @@ flowchart LR
     B --> C{Data Quality<br/>Validation}
     C --> D[🧮 Feature Engineering<br/>AttritionRiskScore]
     D --> E[🐘 PostgreSQL<br/>Star Schema Load]
-    E --> F[🔎 SQL Analytics Layer<br/>CTEs + Window Functions]
+    E --> F[🔎 SQL Analytics Layer<br/>CTEs + Window Functions + JOINs]
     F --> G[📊 Power BI<br/>Data Model + DAX]
     G --> H[🖥️ Executive Dashboards<br/>4-Page Report]
 ```
@@ -116,11 +116,11 @@ flowchart LR
 
 | Stage | Description | Key Techniques |
 |:---|:---|:---|
-| **Extraction** | Raw HR dataset ingested via `pandas.read_csv()` inside `notebooks/hr_attrition_data_cleaning_eda.ipynb` | Schema inspection, dtype casting, encoding checks |
+| **Extraction** | Raw HR dataset ingested via `pandas.read_csv()` inside `scripts/hr_analytics_eda.ipynb` | Schema inspection, dtype casting, encoding checks |
 | **Cleaning** | Null handling, duplicate removal, categorical standardization (e.g., `OverTime`, `MaritalStatus`, `EducationField`) | `.isnull()`, `.duplicated()`, `.map()`, `.astype()` |
 | **Feature Engineering** | Construction of the composite **`AttritionRiskScore`** from weighted behavioral and compensation signals (OverTime, Work-Life Balance, Job Satisfaction, Salary Gap, Tenure) | Vectorized NumPy scoring logic, conditional binning |
-| **Loading** | Cleaned, feature-enriched DataFrames exported and loaded into PostgreSQL using `psycopg2` / SQLAlchemy `to_sql()` | Batch inserts, primary/foreign key constraint enforcement |
-| **Transformation (SQL)** | Business-logic queries executed directly in PostgreSQL via pgAdmin 4 | CTEs, `PARTITION BY` window functions, conditional aggregation |
+| **Loading** | Cleaned, feature-enriched DataFrames split across fact/dimension frames and loaded into PostgreSQL using `psycopg2` / SQLAlchemy `to_sql()` | Batch inserts, primary/foreign key constraint enforcement |
+| **Transformation (SQL)** | Business-logic queries executed directly in PostgreSQL via pgAdmin 4 | CTEs, `PARTITION BY` window functions, JOINs across fact and dimension tables |
 | **Modeling & Reporting** | PostgreSQL tables imported into Power BI, related into a Star Schema, and enriched with DAX measures | Star schema relationships, DAX (`CALCULATE`, `DIVIDE`, `RANKX`) |
 
 <br/>
@@ -130,7 +130,7 @@ flowchart LR
 ## 📐 Database Schema & Data Modeling
 
 <div align="center">
-<img src="assets/postgres_erd.png" alt="PostgreSQL Entity Relationship Diagram" width="750"/>
+<img src="assets/postgresql_erd.png" alt="PostgreSQL Entity Relationship Diagram" width="750"/>
 <p><i>Fig. 1 — Star Schema ERD generated from PostgreSQL (pgAdmin 4)</i></p>
 </div>
 
@@ -141,50 +141,49 @@ The database is intentionally modeled as a **Star Schema** — the industry-stan
 ### ⭐ Schema Architecture
 
 ```
-                         ┌───────────────────────┐
-                         │   dim_employee_demo   │
-                         │───────────────────────│
-                         │ EmployeeID (PK)       │
-                         │ Gender                │
-                         │ Age                   │
-                         │ MaritalStatus         │
-                         │ EducationField        │
-                         └───────────┬───────────┘
+                       ┌───────────────────────────┐
+                       │      dim_demographics      │
+                       │───────────────────────────│
+                       │ demographics_id (PK)       │
+                       │ "Gender"                   │
+                       │ "Age"                      │
+                       │ "MaritalStatus"            │
+                       │ "EducationField"           │
+                       └─────────────┬─────────────┘
                                      │
-┌───────────────────────┐           │           ┌───────────────────────┐
-│      dim_job_role      │          │           │      dim_date         │
-│─────────────────────── │          │           │───────────────────────│
-│ JobRoleID (PK)         │◄─────────┼──────────►│ DateKey (PK)          │
-│ JobRole                │          │           │ Year / Quarter        │
-│ Department             │          │           │ Month / MonthName     │
-│ JobLevel               │          │           └───────────────────────┘
-└───────────┬────────────┘          │
-            │                       │
-            ▼                       ▼
-                 ┌─────────────────────────────────┐
-                 │        fact_hr_attrition          │
-                 │─────────────────────────────────│
-                 │ EmployeeID (FK)                  │
-                 │ JobRoleID (FK)                   │
-                 │ DateKey (FK)                     │
-                 │ MonthlyIncome                    │
-                 │ Attrition (Yes/No)               │
-                 │ OverTime                         │
-                 │ WorkLifeBalance                  │
-                 │ JobSatisfaction                  │
-                 │ AttritionRiskScore                │
-                 │ YearsAtCompany                   │
-                 └─────────────────────────────────┘
+┌───────────────────────┐           │           ┌───────────────────────────┐
+│         dim_job         │         │           │      dim_satisfaction      │
+│───────────────────────  │         │           │───────────────────────────│
+│ job_id (PK)             │◄────────┼──────────►│ satisfaction_id (PK)       │
+│ "JobRole"               │         │           │ "WorkLifeBalance"          │
+│ "Department"            │         │           │ "JobSatisfaction"          │
+│ "JobLevel"              │         │           └───────────────────────────┘
+└────────────┬────────────┘         │
+             │                      │
+             ▼                      ▼
+                  ┌───────────────────────────────────┐
+                  │        fact_employee_attrition      │
+                  │─────────────────────────────────── │
+                  │ "EmployeeID"                        │
+                  │ job_id (FK)                         │
+                  │ demographics_id (FK)                │
+                  │ satisfaction_id (FK)                │
+                  │ "MonthlyIncome"                     │
+                  │ "Attrition"                         │
+                  │ "OverTime"                          │
+                  │ "AttritionRiskScore"                │
+                  │ "YearsAtCompany"                    │
+                  └───────────────────────────────────┘
 ```
 
 ### 📋 Table Reference
 
-| Table | Type | Grain | Key Fields |
-|:---|:---:|:---|:---|
-| **`fact_hr_attrition`** | Fact | 1 row per employee snapshot | `MonthlyIncome`, `Attrition`, `OverTime`, `AttritionRiskScore`, `WorkLifeBalance` |
-| **`dim_employee_demo`** | Dimension | 1 row per employee | `Gender`, `Age`, `MaritalStatus`, `EducationField` |
-| **`dim_job_role`** | Dimension | 1 row per role/department | `JobRole`, `Department`, `JobLevel` |
-| **`dim_date`** | Dimension | 1 row per calendar period | `Year`, `Quarter`, `Month` |
+| Table | Type | Grain | Primary/Foreign Keys | Key Fields |
+|:---|:---:|:---|:---|:---|
+| **`fact_employee_attrition`** | Fact | 1 row per employee snapshot | `job_id` (FK), `demographics_id` (FK), `satisfaction_id` (FK) | `"MonthlyIncome"`, `"Attrition"`, `"OverTime"`, `"AttritionRiskScore"` |
+| **`dim_job`** | Dimension | 1 row per role/department | `job_id` (PK) | `"JobRole"`, `"Department"`, `"JobLevel"` |
+| **`dim_demographics`** | Dimension | 1 row per employee | `demographics_id` (PK) | `"Gender"`, `"Age"`, `"MaritalStatus"`, `"EducationField"` |
+| **`dim_satisfaction`** | Dimension | 1 row per satisfaction profile | `satisfaction_id` (PK) | `"WorkLifeBalance"`, `"JobSatisfaction"` |
 
 **Why a Star Schema?**
 - ✅ Denormalized dimensions → faster DAX aggregations, fewer join hops
@@ -192,32 +191,35 @@ The database is intentionally modeled as a **Star Schema** — the industry-stan
 - ✅ Directly compatible with Power BI's VertiPaq engine best practices
 - ✅ Scales cleanly if additional fact tables (e.g., `fact_recruitment`, `fact_performance`) are added later
 
+> **Note:** Column names were created with mixed-case identifiers in PostgreSQL (e.g., `"JobRole"`, `"MonthlyIncome"`), which means they must always be referenced in **double quotes** in SQL — unquoted identifiers are automatically lower-cased by Postgres and will raise a `column does not exist` error.
+
 <br/>
 
 ---
 
 ## 💡 Advanced SQL Analytics & Business Insights
 
-All queries below live in [`sql/queries.sql`](sql/queries.sql) and were executed in **PostgreSQL via pgAdmin 4**. Each query pairs a specific analytical technique with a concrete business finding.
+All queries below live in [`sql/queries.sql`](sql/queries.sql) and were executed in **PostgreSQL via pgAdmin 4**, joining across the `fact_employee_attrition`, `dim_job`, `dim_demographics`, and `dim_satisfaction` tables. Each query pairs a specific analytical technique with a concrete business finding.
 
 <br/>
 
 ### 1️⃣ OverTime & Work-Life Balance Interaction
 
-**Technique:** Conditional aggregation with `CASE WHEN`, grouped rate calculation.
+**Technique:** JOIN to `dim_satisfaction` + conditional aggregation with `CASE WHEN`.
 
 ```sql
 SELECT
-    OverTime,
-    WorkLifeBalance,
+    f."OverTime",
+    s."WorkLifeBalance",
     COUNT(*) AS total_employees,
-    SUM(CASE WHEN Attrition = 'Yes' THEN 1 ELSE 0 END) AS total_departures,
+    SUM(CASE WHEN f."Attrition" = 'Yes' THEN 1 ELSE 0 END) AS total_departures,
     ROUND(
-        100.0 * SUM(CASE WHEN Attrition = 'Yes' THEN 1 ELSE 0 END) / COUNT(*),
+        100.0 * SUM(CASE WHEN f."Attrition" = 'Yes' THEN 1 ELSE 0 END) / COUNT(*),
         2
     ) AS attrition_rate_pct
-FROM fact_hr_attrition
-GROUP BY OverTime, WorkLifeBalance
+FROM fact_employee_attrition f
+JOIN dim_satisfaction s ON f.satisfaction_id = s.satisfaction_id
+GROUP BY f."OverTime", s."WorkLifeBalance"
 ORDER BY attrition_rate_pct DESC;
 ```
 
@@ -227,25 +229,26 @@ ORDER BY attrition_rate_pct DESC;
 
 ### 2️⃣ Salary Gap Analysis via Window Functions
 
-**Technique:** `AVG() OVER (PARTITION BY JobRole)` to benchmark each individual against their role's peer average without collapsing row-level detail.
+**Technique:** JOIN to `dim_job` + `AVG() OVER (PARTITION BY "JobRole")` to benchmark each individual against their role's peer average without collapsing row-level detail.
 
 ```sql
 WITH salary_benchmark AS (
     SELECT
-        EmployeeID,
-        JobRole,
-        Attrition,
-        MonthlyIncome,
-        AVG(MonthlyIncome) OVER (PARTITION BY JobRole) AS avg_role_income,
-        MonthlyIncome - AVG(MonthlyIncome) OVER (PARTITION BY JobRole) AS income_gap
-    FROM fact_hr_attrition
+        f."EmployeeID",
+        j."JobRole",
+        f."Attrition",
+        f."MonthlyIncome",
+        AVG(f."MonthlyIncome") OVER (PARTITION BY j."JobRole") AS avg_role_income,
+        f."MonthlyIncome" - AVG(f."MonthlyIncome") OVER (PARTITION BY j."JobRole") AS income_gap
+    FROM fact_employee_attrition f
+    JOIN dim_job j ON f.job_id = j.job_id
 )
 SELECT
-    JobRole,
+    "JobRole",
     ROUND(AVG(income_gap), 2) AS avg_income_gap_departed
 FROM salary_benchmark
-WHERE Attrition = 'Yes'
-GROUP BY JobRole
+WHERE "Attrition" = 'Yes'
+GROUP BY "JobRole"
 ORDER BY avg_income_gap_departed ASC;
 ```
 
@@ -255,18 +258,19 @@ ORDER BY avg_income_gap_departed ASC;
 
 ### 3️⃣ Financial Cost Impact by Job Role
 
-**Technique:** CTE + aggregate multiplication to translate headcount loss into monthly payroll exposure.
+**Technique:** JOIN to `dim_job` + CTE + aggregate multiplication to translate headcount loss into monthly payroll exposure.
 
 ```sql
 WITH departed_costs AS (
     SELECT
-        JobRole,
+        j."JobRole",
         COUNT(*) AS departures,
-        ROUND(AVG(MonthlyIncome), 2) AS avg_income,
-        COUNT(*) * AVG(MonthlyIncome) AS total_monthly_payroll_lost
-    FROM fact_hr_attrition
-    WHERE Attrition = 'Yes'
-    GROUP BY JobRole
+        ROUND(AVG(f."MonthlyIncome"), 2) AS avg_income,
+        ROUND(COUNT(*) * AVG(f."MonthlyIncome"), 2) AS total_monthly_payroll_lost
+    FROM fact_employee_attrition f
+    JOIN dim_job j ON f.job_id = j.job_id
+    WHERE f."Attrition" = 'Yes'
+    GROUP BY j."JobRole"
 )
 SELECT *
 FROM departed_costs
@@ -286,18 +290,20 @@ While **Laboratory Technicians** lead in raw departure **volume** (62 exits), **
 
 ### 4️⃣ High-Risk Active Employee Cohort
 
-**Technique:** Filtered aggregation against the engineered `AttritionRiskScore` feature to isolate employees who haven't left yet — but are statistically primed to.
+**Technique:** Filtered aggregation against the engineered `"AttritionRiskScore"` feature (stored directly on the fact table) to isolate employees who haven't left yet — but are statistically primed to.
 
 ```sql
 SELECT
     COUNT(*) AS high_risk_employees,
     ROUND(
-        100.0 * COUNT(*) / (SELECT COUNT(*) FROM fact_hr_attrition WHERE Attrition = 'No'),
+        100.0 * COUNT(*) / (
+            SELECT COUNT(*) FROM fact_employee_attrition WHERE "Attrition" = 'No'
+        ),
         2
     ) AS pct_of_active_workforce
-FROM fact_hr_attrition
-WHERE Attrition = 'No'
-  AND AttritionRiskScore >= 3;
+FROM fact_employee_attrition
+WHERE "Attrition" = 'No'
+  AND "AttritionRiskScore" >= 3;
 ```
 
 **📊 Finding:** **156 currently active employees (12.7% of the active workforce)** carry an `AttritionRiskScore ≥ 3`. This cohort represents the organization's **actionable retention target list** — the group where a well-timed HR intervention has the highest probability of preventing a resignation before it happens.
@@ -306,20 +312,21 @@ WHERE Attrition = 'No'
 
 ### 5️⃣ Demographic Vulnerability Analysis
 
-**Technique:** Multi-dimensional `GROUP BY` across `Gender` and `EducationField` to surface intersectional attrition patterns.
+**Technique:** JOIN to `dim_demographics` + multi-dimensional `GROUP BY` across `"Gender"` and `"EducationField"` to surface intersectional attrition patterns.
 
 ```sql
 SELECT
-    Gender,
-    EducationField,
+    d."Gender",
+    d."EducationField",
     COUNT(*) AS total_employees,
-    SUM(CASE WHEN Attrition = 'Yes' THEN 1 ELSE 0 END) AS departures,
+    SUM(CASE WHEN f."Attrition" = 'Yes' THEN 1 ELSE 0 END) AS departures,
     ROUND(
-        100.0 * SUM(CASE WHEN Attrition = 'Yes' THEN 1 ELSE 0 END) / COUNT(*),
+        100.0 * SUM(CASE WHEN f."Attrition" = 'Yes' THEN 1 ELSE 0 END) / COUNT(*),
         2
     ) AS attrition_rate_pct
-FROM fact_hr_attrition
-GROUP BY Gender, EducationField
+FROM fact_employee_attrition f
+JOIN dim_demographics d ON f.demographics_id = d.demographics_id
+GROUP BY d."Gender", d."EducationField"
 HAVING COUNT(*) > 10
 ORDER BY attrition_rate_pct DESC;
 ```
@@ -426,20 +433,20 @@ The `.pbix` report was designed with a **persona-driven page architecture** — 
 HR-Analytics-Attrition-Risk-Intelligence/
 │
 ├── assets/
-│   ├── overview.png              # Overview dashboard page screenshot
-│   ├── demographics.png          # Demographics dashboard page screenshot
-│   ├── satisfaction.png          # Satisfaction & Pay dashboard page screenshot
-│   ├── risk_detector.png         # Risk Detector Command Center screenshot
-│   └── postgres_erd.png          # PostgreSQL Star Schema ERD diagram
+│   ├── page1_overview.png        # Overview dashboard page screenshot
+│   ├── page2_demographics.png    # Demographics dashboard page screenshot
+│   ├── page3_satisfaction.png    # Satisfaction & Pay dashboard page screenshot
+│   ├── page4_risk_detector.png   # Risk Detector Command Center screenshot
+│   └── postgresql_erd.png        # PostgreSQL Star Schema ERD diagram
 │
-├── notebooks/
-│   └── hr_attrition_data_cleaning_eda.ipynb   # Python cleaning, EDA & feature engineering
+├── report/
+│   └── HR_Analytics.pbix         # Power BI report file
+│
+├── scripts/
+│   └── hr_analytics_eda.ipynb    # Python cleaning, EDA & feature engineering
 │
 ├── sql/
 │   └── queries.sql               # All advanced SQL analytics queries
-│
-├── reports/
-│   └── HR_Analytics.pbix         # Power BI report file
 │
 ├── .gitignore
 ├── LICENSE
@@ -482,9 +489,9 @@ pip install pandas numpy jupyter sqlalchemy psycopg2-binary
 ### Step 3 — Run the Cleaning & Feature Engineering Notebook
 
 ```bash
-jupyter notebook notebooks/hr_attrition_data_cleaning_eda.ipynb
+jupyter notebook scripts/hr_analytics_eda.ipynb
 ```
-Execute all cells top-to-bottom. This will clean the raw dataset, engineer the `AttritionRiskScore` feature, and export the processed tables ready for loading.
+Execute all cells top-to-bottom. This will clean the raw dataset, engineer the `AttritionRiskScore` feature, and export the processed fact/dimension tables ready for loading.
 
 ### Step 4 — Create the PostgreSQL Database
 
@@ -496,23 +503,23 @@ CREATE DATABASE hr_attrition_db;
 
 ### Step 5 — Load the Star Schema Tables
 
-Using the SQLAlchemy connection defined at the end of the notebook (or via pgAdmin's Import/Export tool), load the four tables:
+Using the SQLAlchemy connection defined at the end of the notebook (or via pgAdmin's Import/Export tool), load the four tables in dependency order (dimensions first, then the fact table):
 
 ```
-fact_hr_attrition
-dim_employee_demo
-dim_job_role
-dim_date
+dim_job
+dim_demographics
+dim_satisfaction
+fact_employee_attrition
 ```
 
 ### Step 6 — Run the Analytics Queries
 
-Open `sql/queries.sql` inside pgAdmin 4's Query Tool and execute the five core analytical queries to validate the business findings above.
+Open `sql/queries.sql` inside pgAdmin 4's Query Tool and execute the five core analytical queries to validate the business findings above. Remember that all mixed-case column names (e.g. `"JobRole"`, `"MonthlyIncome"`) must be double-quoted exactly as shown.
 
 ### Step 7 — Open the Power BI Report
 
 ```
-reports/HR_Analytics.pbix
+report/HR_Analytics.pbix
 ```
 In Power BI Desktop, go to **Home → Transform Data → Data Source Settings** and point the PostgreSQL connector to your local `hr_attrition_db` instance. Click **Refresh** to rebuild the model with your local data.
 
