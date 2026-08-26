@@ -138,7 +138,7 @@ flowchart LR
 
 The database is intentionally modeled as a **Star Schema** — the industry-standard architecture for analytical (OLAP) workloads — consisting of **one central Fact Table** and **three supporting Dimension Tables**. This design minimizes query complexity, maximizes Power BI performance via single-directional relationships, and mirrors how real enterprise data warehouses are structured.
 
-
+<br/>
 
 
 ### 📋 Table Reference
