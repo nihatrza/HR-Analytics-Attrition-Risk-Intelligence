@@ -138,42 +138,7 @@ flowchart LR
 
 The database is intentionally modeled as a **Star Schema** — the industry-standard architecture for analytical (OLAP) workloads — consisting of **one central Fact Table** and **three supporting Dimension Tables**. This design minimizes query complexity, maximizes Power BI performance via single-directional relationships, and mirrors how real enterprise data warehouses are structured.
 
-### ⭐ Schema Architecture
 
-```
-                       ┌───────────────────────────┐
-                       │      dim_demographics      │
-                       │───────────────────────────│
-                       │ demographics_id (PK)       │
-                       │ "Gender"                   │
-                       │ "Age"                      │
-                       │ "MaritalStatus"            │
-                       │ "EducationField"           │
-                       └─────────────┬─────────────┘
-                                     │
-┌───────────────────────┐           │           ┌───────────────────────────┐
-│         dim_job         │         │           │      dim_satisfaction      │
-│───────────────────────  │         │           │───────────────────────────│
-│ job_id (PK)             │◄────────┼──────────►│ satisfaction_id (PK)       │
-│ "JobRole"               │         │           │ "WorkLifeBalance"          │
-│ "Department"            │         │           │ "JobSatisfaction"          │
-│ "JobLevel"              │         │           └───────────────────────────┘
-└────────────┬────────────┘         │
-             │                      │
-             ▼                      ▼
-                  ┌───────────────────────────────────┐
-                  │        fact_employee_attrition      │
-                  │─────────────────────────────────── │
-                  │ "EmployeeID"                        │
-                  │ job_id (FK)                         │
-                  │ demographics_id (FK)                │
-                  │ satisfaction_id (FK)                │
-                  │ "MonthlyIncome"                     │
-                  │ "Attrition"                         │
-                  │ "OverTime"                          │
-                  │ "AttritionRiskScore"                │
-                  │ "YearsAtCompany"                    │
-                  └───────────────────────────────────┘
 ```
 
 ### 📋 Table Reference
