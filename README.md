@@ -531,34 +531,17 @@ Navigate across the four report pages (Overview, Demographics, Satisfaction & Pa
 
 ---
 
-## 👤 Author & License
+## 👤 Author
+
+**Nihat Rzaquluzade | Junior Data Analyst**
+
+This project was developed as a professional **Data Analytics portfolio project**, demonstrating skills in Python, PostgreSQL, ETL processes, data cleaning, SQL analysis, and Power BI data visualization.
+
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/nihatrza)
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/nihat-rzaquluzade-624b332a9/)
+
+---
 
 <div align="center">
 
-### **Nihat Rzaquluzade**
-*Data Analyst*
-
-<p>
-  <img src="https://img.shields.io/badge/Role-Data%20Analyst-blueviolet?style=flat-square" alt="role"/>
-  <img src="https://img.shields.io/badge/Focus-HR%20%26%20People%20Analytics-teal?style=flat-square" alt="focus"/>
-</p>
-
-</div>
-
-This project is developed as part of a professional data analytics portfolio, demonstrating end-to-end proficiency across **Python ETL, PostgreSQL database engineering, advanced SQL analytics, and enterprise Power BI reporting**.
-
-### 📄 License
-
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for full details.
-
-```
-MIT License — free to use, modify, and distribute with attribution.
-```
-
-<br/>
-
-<div align="center">
-
-**⭐ If this project was useful to you, consider giving it a star on GitHub.**
-
-</div>
